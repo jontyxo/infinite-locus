@@ -7,6 +7,7 @@
 
 
 import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
+import FlashMessage from "react-native-flash-message";
 import {
   SafeAreaProvider,
   SafeAreaView,
@@ -19,7 +20,7 @@ function App() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
+      <SafeAreaView style={{backgroundColor:'white'}}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <HomeScreen />
       </SafeAreaView>

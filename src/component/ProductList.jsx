@@ -8,72 +8,15 @@ import {
   Alert,
 } from 'react-native';
 import React from 'react';
-import { showMessage } from 'react-native-flash-message';
+import {addToCart,removeFromCart} from '../../utils.js';
 const { width } = Dimensions.get('window');
 const { PlusIconPink, MinusIconPink, MinusGreyIcon } = require('../svg');
 
 const useWidth = width - width * 0.15;
 
 export const ProductList = ({ productList, cartItems, setCartItems }) => {
-  const addToCart = item => {
-    const isItemInCart = cartItems.find(cartItem => cartItem.id === item.id);
-    if (isItemInCart) {
-      if (isItemInCart.count >= 9) {
-        showMessage({
-          message: 'Cannot add more than 9 items of the same product',
-          type: 'error',
-          backgroundColor: '#D34E4E',
-        });
-        return;
-      }
-      setCartItems(prev => {
-        return prev.map(cartItem => {
-          if (cartItem.id === item.id) {
-            return { ...cartItem, count: cartItem.count + 1 };
-          }
-          return cartItem;
-        });
-      });
-    } else {
-      setCartItems([...cartItems, { count: 1, ...item }]);
-    }
-    showMessage({
-      message: 'Item added to cart',
-      type: 'success',
-      backgroundColor: '#f41bb2',
-    });
-  };
 
-  const removeFromCart = item => {
-    const isItemInCart = cartItems.find(cartItem => cartItem.id === item.id);
-    if (isItemInCart) {
-      if (isItemInCart.count <= 1) {
-        setCartItems(prev => prev.filter(cartItem => cartItem.id !== item.id));
-        showMessage({
-          message: 'Item removed from cart',
-          type: 'success',
-          backgroundColor: '#f41bb2',
-        });
-        return;
-      }
 
-      setCartItems(prev => {
-        return prev.map(cartItem => {
-          if (cartItem.id === item.id) {
-            return { ...cartItem, count: cartItem.count - 1 };
-          }
-          return cartItem;
-        });
-      });
-      showMessage({
-        message: 'Item removed from cart',
-        type: 'success',
-        backgroundColor: '#f41bb2',
-      });
-    } else {
-      return;
-    }
-  };
 
   const renderItem = ({ item }) => {
     return (
@@ -117,7 +60,7 @@ export const ProductList = ({ productList, cartItems, setCartItems }) => {
             >
               <Pressable
                 onPress={() => {
-                  addToCart(item);
+                  addToCart(item,cartItems,setCartItems);
                 }}
               >
                 <PlusIconPink />
@@ -127,7 +70,7 @@ export const ProductList = ({ productList, cartItems, setCartItems }) => {
               </Text>
 
               {cartItems?.find(citem => citem?.id === item?.id)?.count ? (
-                <Pressable onPress={() => removeFromCart(item)}>
+                <Pressable onPress={() => removeFromCart(item,cartItems,setCartItems)}>
                   <MinusIconPink />
                 </Pressable>
               ) : (
@@ -147,6 +90,7 @@ export const ProductList = ({ productList, cartItems, setCartItems }) => {
           flexDirection: 'row',
           flexWrap: 'wrap',
           justifyContent: 'space-evenly',
+          paddingBottom:200
         }}
         data={productList}
         renderItem={renderItem}
